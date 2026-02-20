@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Input</title>
+</head>
+<body>
+    <h2>Vnesite email kamor želite poslati</h2>
+
+    <form method="POST">
+        <label>Podatki o študiji:</label>
+        <p>
+            UUID: {{uuid}}<br>
+            Patient: {{patient}}<br>
+            Patient ID: {{patientid}}<br>
+            Date: {{date}}<br>
+        </p>       
+        <label>Email:</label><br>
+        <input type="email" name="email" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
