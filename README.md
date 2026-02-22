@@ -81,8 +81,8 @@ The app allows for a custom email message to be specified. Make a `message.txt` 
 
 Use the placeholders:
 
-- #LINK# → Will be replaced with the generated share link
-- #PATIENT# → Will be replaced with the patient name
+- #LINK# -> Will be replaced with the generated share link
+- #PATIENT# -> Will be replaced with the patient name
 
 Example:
 ```txt
@@ -96,6 +96,7 @@ clinc
 # Docker install
 
 1. Copy Repository
+
 Copy the repository files to a folder on your Synology NAS.
 
 2. SSH Into Synology
