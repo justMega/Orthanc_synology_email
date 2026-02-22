@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Email Input</title>
+</head>
+<body>
+	<div>
+		<h3>Download Progress</h3>
+		<div id="progress-text">0</div>
+	</div>
+	
+	<div>
+		<h3>Status</h3>
+		<div id="status-text">0</div>
+	</div>
+	
+	<script>
+	let studyId = "{{ uuid }}";
+	function pollProgress() {
+		fetch(`/progress/${studyId}`)
+			.then(res => res.json())
+			.then(data => {
+				let prog = data.progress;
+				document.getElementById('status-text').innerText = data.status;
+				if (data.status === "downloading"){
+					document.getElementById('progress-text').innerText = prog;
+				}else if (data.status === "done"){
+					window.location.replace(`../done/${studyId}`);
+				}else{
+					window.location.replace(`../error/${data.status}/${studyId}`);
+				}
+				setTimeout(pollProgress, 1000);
+			});
+	}
+	pollProgress();
+	</script>
+</body>
+</html>
