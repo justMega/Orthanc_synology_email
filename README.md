@@ -8,17 +8,22 @@ Designed for small clinics, veterinary practices, and private imaging centers us
 This service acts as a companion application to Orthanc.
 It allows users to:
 
-- Select a study from Orthanc
-
-- Generate a secure share link
-
-- Send study access via email
-
-- Optionally set expiration for shared links (WIP)
+- ✅ Select a study from Orthanc
+- ✅ Generate a secure share link
+- ✅ Send study access via email
+- 🚧 Optionally set expiration for shared links
+- 🚧 Use non gmail email
 
 # Orthanc Integration
 
-In order for to integrate this application in orthanc we will first need to app a custom button to the study page that points to this app add the folowing to the `orthanc.json`. Replace the <SERVER_IP> with the synology nas ip and the <APP_PORT> with the port that you will later assign to this aplication.
+To integrate this application into Orthanc, you need to add a custom button to the study page in Orthanc Explorer 2.
+
+Add the following configuration to your `orthanc.json`. Then restart orthanc server for the changes to take effect. 
+
+Replace:
+
+- \<SERVER_IP\> with your Synology NAS IP address
+- \<APP_PORT\> with the port you assign to this application
 
 ```json
  "OrthancExplorer2": {
@@ -46,7 +51,13 @@ In order for to integrate this application in orthanc we will first need to app 
 
 # Environment Variables
 
-Create a .env file and fill in your data leave the STUDY_PATH as is. For gmail the password has to be an app pasword more about here: https://support.google.com/accounts/answer/185833?hl=en
+Create a .env file in the project root and fill in your data.
+
+⚠️ Leave STUDY_PATH unchanged.
+
+For Gmail, you must use an App Password (not your regular account password).
+More information:
+https://support.google.com/accounts/answer/185833?hl=en
 
 ```txt
 SENDER_EMAIL=your email
@@ -61,13 +72,19 @@ OR_USER=example_orthanc
 OR_PASS=example_orthanc_pass
 
 STUDY_PATH=etc/data 
-SYNOLOGY_PATH=/path to share folder on synology
+SYNOLOGY_PATH=/path/to/share/folder/on/synology
 ```
 
 # Email message
 
-The app allows for a custom email message to be specified. Make a `message.txt` and define your message. You have to use `#LINK#` where you wish for your link to be inserted and `#PATIENT#` for the patient name.
+The app allows for a custom email message to be specified. Make a `message.txt` and define your message. 
 
+Use the placeholders:
+
+- #LINK# → Will be replaced with the generated share link
+- #PATIENT# → Will be replaced with the patient name
+
+Example:
 ```txt
 Dear owner.
 We are sending you the link #LINK# to your pet's #PATIENT# CT scan
@@ -78,13 +95,26 @@ clinc
 
 # Docker install
 
-First copy the repository files to a folder on the synology nas. Then ssh in to synology nas and cd to the repository folder. Lastly run the two commands. 
+1. Copy Repository
+Copy the repository files to a folder on your Synology NAS.
 
+2. SSH Into Synology
+```txt
+ssh your_user@<SERVER_IP>
+cd /path/to/repository
+```
+
+3. Build Docker Image
 ```txt
 sudo docker build -t orthanc_synology_email .
 ```
 
+4. Run Container
+
+Replace:
+- /path_to_share_folder with your Synology shared folder path
+- \<PORT\> with the port you want to expose
 ```txt
-sudo docker run -d --env-file .env -v /path_to_share_folder:/app/etc/data -p <PORT>:5000 orthanc_synology_nas
+sudo docker run -d --env-file .env -v /path_to_share_folder:/app/etc/data -p <PORT>:5000 orthanc_synology_email
 ```
 
