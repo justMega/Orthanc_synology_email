@@ -46,8 +46,45 @@ In order for to integrate this application in orthanc we will first need to app 
 
 # Environment Variables
 
-Create a .env file:
+Create a .env file and fill in your data leave the STUDY_PATH as is. For gmail the password has to be an app pasword more about here: https://support.google.com/accounts/answer/185833?hl=en
 
 ```txt
+SENDER_EMAIL=your email
+SENDER_PASSWORD=email password
 
+SYNOLOGY_URL=https://<SERVER_IP>:5001
+SYNO_USER=example_admin
+SYNO_PASS=example_password
+
+ORTHANC_URL=http://<ORTHANC_IP>:<ORTHANC_PORT>
+OR_USER=example_orthanc
+OR_PASS=example_orthanc_pass
+
+STUDY_PATH=etc/data 
+SYNOLOGY_PATH=/path to share folder on synology
 ```
+
+# Email message
+
+The app allows for a custom email message to be specified. Make a `message.txt` and define your message. You have to use `#LINK#` where you wish for your link to be inserted and `#PATIENT#` for the patient name.
+
+```txt
+Dear owner.
+We are sending you the link #LINK# to your pet's #PATIENT# CT scan
+
+Best regards
+clinc 
+```
+
+# Docker install
+
+First copy the repository files to a folder on the synology nas. Then ssh in to synology nas and cd to the repository folder. Lastly run the two commands. 
+
+```txt
+sudo docker build -t orthanc_synology_email .
+```
+
+```txt
+sudo docker run -d --env-file .env -v /path_to_share_folder:/app/etc/data -p <PORT>:5000 orthanc_synology_nas
+```
+
