@@ -10,7 +10,7 @@ WORKDIR /app
 
 # Copy requirements and install
 COPY requirements.txt .
-COPY massage.txt .
+COPY message.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install python-dotenv  # for reading .env files
 

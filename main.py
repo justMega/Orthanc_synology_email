@@ -119,7 +119,7 @@ def download_and_email(uuid, patient, patientid, date, email):
 	msg["From"] = SENDER_EMAIL
 	msg["To"] = email
 	
-	file_path = "massage.txt"
+	file_path = "message.txt"
 	with open(file_path, "r", encoding="utf-8") as f:
 		content = f.read()
 	

@@ -1,17 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Email Input</title>
+	<title>Zipping</title>
 </head>
 <body>
 	<div>
-		<h3>Download Progress</h3>
+		<h3>Zipping Progress</h3>
 		<div id="progress-text">0</div>
-	</div>
-	
-	<div>
-		<h3>Status</h3>
-		<div id="status-text">0</div>
 	</div>
 	
 	<script>
@@ -21,7 +16,6 @@
 			.then(res => res.json())
 			.then(data => {
 				let prog = data.progress;
-				document.getElementById('status-text').innerText = data.status;
 				if (data.status === "downloading"){
 					document.getElementById('progress-text').innerText = prog;
 				}else if (data.status === "done"){
