@@ -1,23 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Email Input</title>
-</head>
-<body>
-	<h2>Enter the recipient's email</h2>
+{% extends "base.html" %}
+{% block title %}Send study{% endblock %}
+{% block content %}
+	<h1>Send study by email</h1>
+	<p class="subtitle">The recipient will receive a download link for this study.</p>
 
-	<form method="POST">
-		<label>Study info:</label>
-		<p>
-			UUID: {{uuid}}<br>
-			Patient: {{patient}}<br>
-			Patient ID: {{patientid}}<br>
-			Date: {{date}}<br>
-		</p>	   
-		<label>Email:</label><br>
-		<input type="email" name="email" required><br><br>
+	<dl class="info">
+		<div><dt>Patient</dt><dd>{{ patient or "—" }}</dd></div>
+		<div><dt>Patient ID</dt><dd>{{ patientid or "—" }}</dd></div>
+		<div><dt>Study date</dt><dd>{{ date or "—" }}</dd></div>
+		<div><dt>Study</dt><dd class="mono">{{ uuid }}</dd></div>
+	</dl>
 
-		<button type="submit">Submit</button>
+	<form method="POST" onsubmit="this.querySelector('button').disabled = true">
+		<label for="email">Recipient email</label>
+		<input type="email" id="email" name="email" placeholder="name@example.com" required autofocus>
+		<button type="submit">Send link</button>
 	</form>
-</body>
-</html>
+{% endblock %}

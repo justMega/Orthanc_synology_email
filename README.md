@@ -11,8 +11,8 @@ It allows users to:
 - ✅ Select a study from Orthanc
 - ✅ Generate a secure share link
 - ✅ Send study access via email
-- 🚧 Optionally set expiration for shared links
-- 🚧 Use non gmail email
+- ✅ Share links expire and exported studies are auto-deleted after `RETENTION_DAYS` (default 14)
+- ✅ Use non gmail email (set `SMTP_HOST` / `SMTP_PORT`)
 
 # Orthanc Integration
 
@@ -73,7 +73,22 @@ OR_PASS=example_orthanc_pass
 
 STUDY_PATH=etc/data 
 SYNOLOGY_PATH=/path/to/share/folder/on/synology
+
+# Optional (defaults shown)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SYNO_VERIFY_SSL=false
+RETENTION_DAYS=14
+CLEANUP_INTERVAL_HOURS=6
+MESSAGE_FILE=message.txt
 ```
+
+# Automatic cleanup
+
+Exported study zips in `STUDY_PATH` are deleted automatically once they are older than
+`RETENTION_DAYS` (default 14 days). The check runs at startup and then every
+`CLEANUP_INTERVAL_HOURS`. Synology share links are created with the same expiration date,
+so recipients never get a link to a file that no longer exists. Re-sending a study resets its age.
 
 # Email message
 
@@ -83,6 +98,7 @@ Use the placeholders:
 
 - #LINK# -> Will be replaced with the generated share link
 - #PATIENT# -> Will be replaced with the patient name
+- #DATUM# -> Will be replaced with the study date (DD.MM.YYYY)
 
 Example:
 ```txt

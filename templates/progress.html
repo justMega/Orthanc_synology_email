@@ -1,32 +1,74 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Zipping</title>
-</head>
-<body>
-	<div>
-		<h3>Zipping Progress</h3>
-		<div id="progress-text">0</div>
-	</div>
-	
-	<script>
-	let studyId = "{{ uuid }}";
-	function pollProgress() {
-		fetch(`/progress/${studyId}`)
+{% extends "base.html" %}
+{% block title %}Sending study…{% endblock %}
+{% block content %}
+	<h1 id="title">Sending study…</h1>
+	<p class="subtitle">You can keep this page open; it updates automatically.</p>
+
+	<div class="bar" id="bar"><span></span></div>
+	<div class="muted" id="progress-text">Starting…</div>
+
+	<ul class="steps">
+		<li data-step="downloading">Downloading study from Orthanc</li>
+		<li data-step="sharing">Creating share link</li>
+		<li data-step="sending">Sending email</li>
+	</ul>
+
+	<div class="alert" id="result" hidden></div>
+{% endblock %}
+{% block scripts %}
+<script>
+	const studyId = {{ uuid | tojson }};
+	const order = ["downloading", "sharing", "sending"];
+	const bar = document.getElementById("bar");
+	const fill = bar.querySelector("span");
+	const text = document.getElementById("progress-text");
+	const steps = document.querySelectorAll(".steps li");
+
+	function markSteps(current, failed) {
+		const idx = order.indexOf(current);
+		steps.forEach((li, i) => {
+			li.className = i < idx ? "done" : i === idx ? (failed ? "failed" : "active") : "";
+		});
+	}
+
+	function finish(ok, message) {
+		document.getElementById("title").textContent = ok ? "Email sent" : "Something went wrong";
+		const result = document.getElementById("result");
+		result.className = "alert " + (ok ? "ok" : "err");
+		result.textContent = message;
+		result.hidden = false;
+		bar.hidden = text.hidden = true;
+	}
+
+	let lastStep = "downloading";
+	function poll() {
+		fetch(`/progress/${encodeURIComponent(studyId)}`)
 			.then(res => res.json())
 			.then(data => {
-				let prog = data.progress;
-				if (data.status === "downloading"){
-					document.getElementById('progress-text').innerText = prog;
-				}else if (data.status === "done"){
-					window.location.replace(`../done/${studyId}`);
-				}else{
-					window.location.replace(`../error/${data.status}/${studyId}`);
+				if (data.status === "done") {
+					markSteps("done");
+					finish(true, "The download link has been sent to the recipient.");
+					return;
 				}
-				setTimeout(pollProgress, 1000);
+				if (order.includes(data.status)) {
+					lastStep = data.status;
+					markSteps(data.status);
+					const pct = parseFloat(data.progress);
+					const isPct = data.status === "downloading" && String(data.progress).endsWith("%");
+					bar.classList.toggle("indeterminate", !isPct);
+					fill.style.width = isPct ? pct + "%" : "";
+					text.textContent = data.status === "downloading" ? data.progress : "";
+					setTimeout(poll, 1000);
+					return;
+				}
+				markSteps(lastStep, true);
+				finish(false, data.status);
+			})
+			.catch(() => {
+				text.textContent = "Connection lost, retrying…";
+				setTimeout(poll, 3000);
 			});
 	}
-	pollProgress();
-	</script>
-</body>
-</html>
+	poll();
+</script>
+{% endblock %}

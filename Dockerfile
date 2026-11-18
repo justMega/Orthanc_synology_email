@@ -10,14 +10,11 @@ WORKDIR /app
 
 # Copy requirements and install
 COPY requirements.txt .
-COPY message.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install python-dotenv  # for reading .env files
 
-# Copy app code
-COPY main.py .
+# Copy app code. Secrets are NOT baked into the image: pass them with --env-file .env
+COPY main.py message.txt ./
 COPY templates/ ./templates
-COPY .env .
 
 # Expose port
 EXPOSE 5000

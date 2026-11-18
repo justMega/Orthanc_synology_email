@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{% block title %}Send study{% endblock %}</title>
+	<style>
+		:root {
+			--bg: #f3f5f8; --card: #fff; --text: #1f2937; --muted: #6b7280;
+			--border: #e5e7eb; --primary: #2563eb; --primary-dark: #1d4ed8;
+			--ok: #16a34a; --err: #dc2626;
+		}
+		* { box-sizing: border-box; }
+		body {
+			margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+			padding: 24px; background: var(--bg); color: var(--text);
+			font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+		}
+		.card {
+			width: 100%; max-width: 460px; background: var(--card); border-radius: 14px;
+			box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 10px 30px rgba(0,0,0,.07); padding: 28px;
+		}
+		h1 { font-size: 20px; margin: 0 0 4px; }
+		.subtitle { color: var(--muted); margin: 0 0 22px; }
+		.info { margin: 0 0 22px; padding: 14px 16px; background: #f9fafb;
+			border: 1px solid var(--border); border-radius: 10px; }
+		.info div { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; }
+		.info dt { color: var(--muted); }
+		.info dd { margin: 0; font-weight: 600; text-align: right; overflow-wrap: anywhere; }
+		.info .mono { font: 12px/1.8 ui-monospace, Consolas, monospace; font-weight: 400; color: var(--muted); }
+		label { display: block; font-weight: 600; margin-bottom: 6px; }
+		input[type=email] {
+			width: 100%; padding: 11px 12px; font-size: 15px; border: 1px solid #d1d5db;
+			border-radius: 8px; outline: none; transition: border-color .15s, box-shadow .15s;
+		}
+		input[type=email]:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,.15); }
+		button, .btn {
+			display: inline-block; width: 100%; margin-top: 16px; padding: 11px; border: 0; border-radius: 8px;
+			background: var(--primary); color: #fff; font-size: 15px; font-weight: 600; cursor: pointer;
+			text-align: center; text-decoration: none; transition: background .15s;
+		}
+		button:hover, .btn:hover { background: var(--primary-dark); }
+		button:disabled { opacity: .6; cursor: default; }
+		.bar { height: 10px; background: #e5e7eb; border-radius: 99px; overflow: hidden; margin: 8px 0 4px; }
+		.bar > span { display: block; height: 100%; width: 0; background: var(--primary);
+			border-radius: 99px; transition: width .4s ease; }
+		.bar.indeterminate > span { width: 35%; animation: slide 1.2s ease-in-out infinite; }
+		@keyframes slide { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
+		.steps { list-style: none; padding: 0; margin: 20px 0 0; }
+		.steps li { display: flex; align-items: center; gap: 10px; padding: 6px 0; color: var(--muted); }
+		.steps li::before {
+			content: ""; flex: none; width: 18px; height: 18px; border-radius: 50%;
+			border: 2px solid #d1d5db; background: #fff;
+		}
+		.steps li.active { color: var(--text); font-weight: 600; }
+		.steps li.active::before { border-color: var(--primary); border-top-color: transparent; animation: spin .8s linear infinite; }
+		.steps li.done { color: var(--text); }
+		.steps li.done::before { border-color: var(--ok); background: var(--ok); }
+		.steps li.failed { color: var(--err); font-weight: 600; }
+		.steps li.failed::before { border-color: var(--err); background: var(--err); }
+		@keyframes spin { to { transform: rotate(360deg); } }
+		.muted { color: var(--muted); font-size: 13px; }
+		.alert { margin-top: 20px; padding: 12px 14px; border-radius: 8px; font-weight: 500; overflow-wrap: anywhere; }
+		.alert.ok { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+		.alert.err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+		[hidden] { display: none !important; }
+	</style>
+</head>
+<body>
+	<main class="card">
+		{% block content %}{% endblock %}
+	</main>
+	{% block scripts %}{% endblock %}
+</body>
+</html>
